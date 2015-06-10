@@ -1,0 +1,87 @@
+JAVA:
+#------------------------------------------------------------------------------------#
+ISTRUZIONI PER COMPILARE / ESEGUIRE IL CODICE:
+
+per compilare il programma digitare:
+	make build
+
+per eseguire il programma digitare:
+	make run
+
+per compilare ed eseguire il programma digitare:
+	make makeandrun
+
+#------------------------------------------------------------------------------------#
+
+IMPLEMENTAZONE DI TAG:
+
+I tag sono delle etichette che si possono associare ai messaggi che vengono inseriti nel sistema.
+Ogni messaggio deve contenere almeno un tag e nel caso in cui l'utente non voglia inserire nessun tag,
+dovrà creare un tag contenente una stringa vuota (Tag t = new Tag("")).
+
+costruttore: 
+public Tag(String ... s){...}:
+
+Come abbiamo detto i tag possono essere più di uno. Il costruttore della classe Tag si aspetta un 
+vettore di dimensione dinamica da cui ricavare i tag relativi al messaggio inserito.
+
+funzione per la ricerca dei tag:
+public boolean containTag(List<String> t){...}
+
+Analizziamo i tag del messaggio in esame e verifichiamo che contenga TUTTI i tag presenti nella lista t.
+Questo implica che 
+	sia tag_in_esame i tag relativi al messaggio in esame
+	sia tag_confronto i tag con cui vogliamo confrontare tag_in_esame
+
+	ritorna TRUE se e solo se tag_cofronto è contenuto(uguale) a tag_in_esame
+
+	quindi:
+	m1 #UNIPI #FIBONACCI
+	m2 #UNIPI
+	m3 #PRL2
+
+	se cerchiamo i messaggi contenenti il tag #UNIPI il risultato sarà: m1, m2
+	se cerchiamo i messaggi contenenti i tag #UNIPI #FIBONACCI il risultato sarà: m1
+
+#------------------------------------------------------------------------------------#
+
+IMPLEMENTAZIONE DI TWEET
+
+la classe Tweet serve per semplificare il sistema. Un oggetto di tipo Tweet contiene delle
+informazioni utili per catalogare i messaggi inseriti. Le informazioni contenute sono:
+	-id = codice univoco per identificare il messaggio
+	-message = il messaggio da memorizzare
+	-tag = i tag relativi al messaggio
+	-user = chi ha scritto il messaggio
+
+#------------------------------------------------------------------------------------#
+
+IMPLEMENTAZIONE DI MYTW
+
+myTw è l'implementazione dell'interfaccia simpleTw.
+
+l'implementazione della password è fatta tramite la variabile final String password, cosi 
+facendo la password non potrà essere modificata una volta inizializzata.
+
+l'implementazione del codice univoco dei tweet è fatto tramite la variabile int code che assume 
+valori tra 0 e il massimo valore rappresentabile con "int". La funzione Tweet ci assicura l'unicità
+dei tweet aggiornando la variabile dopo averla restituita 
+	
+	public int Tweet(...)
+	{
+		...
+		return code++;
+	}
+
+cosi facendo alla prossima invocazione di Tweet, code sarà gia aggiornato a un nuovo valore.
+
+l'implementazione dei Tweet e degli utenti è fatto tramite due liste in modo da gestirle in 
+modo semplice e immediato.
+
+checkUser(User bob): semplice funzione che verifica se l'utente bob è gia presente nel sistema
+
+#------------------------------------------------------------------------------------#
+NOTA SUI COSTRUTTORI DI DEFAULT:
+
+i costruttori di default di User, Tag, Tweet, sono stati esplicitati con l'operatore di visibilità
+private, cosi da evitare l'inserimento di oggetti "vuoti" (new User(), new Tag(), new Tweet()) nel sistema
