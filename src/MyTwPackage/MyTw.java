@@ -11,6 +11,8 @@ import java.util.List;
 public class MyTw implements SimpleTw {
 
     /*
+    * OVERVIEW: microblog
+    *---------------------------------------------------------------------------------------------------
     * FUNZIONE ASTRAZIONE:
     *   {
     *       password: chiave segreta per accedere al sistema
