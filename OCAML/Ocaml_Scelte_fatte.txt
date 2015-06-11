@@ -1,0 +1,109 @@
+OCAML:
+#------------------------------------------------------------------------------------#
+ISTRUZIONI PER COMPILARE / ESEGUIRE IL CODICE:
+
+aprire interpreter "OCAML < progetto.ml"
+
+#------------------------------------------------------------------------------------#
+
+SINTASSI ASTRATTA
+
+per semplificare la gestione dei tipi ho deciso di inserire tutte le sintassi sotto il tipo exp e i
+booleani sono rappresentati da 1 | 0
+
+alcune spiegazioni sulla sintassi usata:
+
+		Function of ide * ide * exp
+
+		dove (da sinistra verso destra)
+			-ide = nome funzione
+			-ide = nome parametro
+			-exp = body
+
+		FunCall of ide * exp 
+
+		dove (da sinistra verso destra)
+			-ide = nome funzione da chiamare
+			-exp = valore da dare al parametro
+
+		Pattern: i pattern non sono altro che una lista di (exp * exp) dove:
+			-la prima espressione è quella da valutare
+		-la seconda espressione è quella da eseguire
+
+emptyEnv = ambiente vuoto delle espressioni. Se viene valutato ritorna un eccezione
+emptyEnvFun = ambiente vuoto delle funzioni. Se viene valuato ritorna un eccezione
+
+#------------------------------------------------------------------------------------#
+
+SEMANTICA OPERAZIONALE
+
+alcune spiegazioni sulla semantica operazionale:
+
+	OPERATORE LET:
+
+		Let(variable, e, body) -> 
+			let value = eval e env fenv in
+				let env1 = bind env variable value in
+					eval body env1 fenv
+		
+		-valuto il corpo nell'ambiente in cui ho legato variable all' espressione e
+	
+	OPERATORE TRYWITHIN e PATTERN:
+
+		TryWithIn(variable, variable_val, pattern) -> 
+			let value = eval variable_val env fenv in
+				let env1 = bind env variable value in
+					eval pattern env1 fenv
+
+		getE p env fenv = match p with
+		| [] -> raise WrongPatternException
+		| (e1,e2)::rest -> if(eval e1 env fenv) == 1 then eval e2 env fenv else getE rest env fenv		
+
+		-avvio il trywithin inserendo il legame tra X ed E nell'ambiente, successivamente valuto pattern nel 
+		nuovo ambiente appena aggiornato.
+		
+		Pattern esegue la funzione getE che si occupa di trovare il match tra X = E e l'espressioni del 
+		pattern
+
+		NOTA: implementazione del caso default ( _ -> E )
+			la coppia del pattern che si riferisce al caso base è la seguente:
+
+				let base = Equ(Value 1, Value1)
+				let Ebase = Value 100
+
+				pattern: (E1, E2)::(E1, E2):: ... :: (base, Ebase)
+
+				dove la valutazione di base equivale all'operazione "if 1 == 1 then Ebase"
+
+		NOTA: la mia implementazione prevede che i pattern termino con il caso base, altrimenti viene 
+			lanciata un'eccezione se non viene soddisfatto alcun match fra quelli contenuti nel pattern.
+	
+	OPERATORE FUNCALL:	
+
+		| FunCall (funName, arg) -> 
+		let value = eval arg env fenv in
+			let (param, body, ambiente) = fenv funName in
+				let env1 = bind env param value in
+					eval body env1 fenv
+
+		-calcolo il valore dell'argomento da passare
+		-prendo il parametro formale, il corpo, l'ambiente della funzione richiesta
+		-effettuo il bind tra il valore calcolato (argomento) e il parametro formale
+		-eseguo la valutazione della funzione
+
+	NOTE SULLE FUNZIONI:
+
+	la dichiarazione di funzione viene eseguita da un'altra funzione chiamata funDeclr.
+
+	funDeclr prende come argomento una espressione (la funzione da dichiarare), l'ambiente
+	delle espressioni da legare alla funzione e l'ambiente delle funzioni.
+	funDeclr ha il compito di effettuare il bind tra il nome della funzione e i 3 parametri che occorrono
+	per gestirla:
+
+		-parametro formale
+		-corpo della funzione
+		-ambiente delle espressioni
+
+	funDeclr ritorna un'eccezione se riceve un' espressione diversa da Function
+
+#------------------------------------------------------------------------------------#
