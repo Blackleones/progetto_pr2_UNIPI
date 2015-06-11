@@ -95,8 +95,6 @@ let funDeclr (expression: exp) env fenv = match expression with
 	****************************************
 					TEST
 	****************************************
-
-	eliminare inizio e fine commento ( (*   *) ) per avviare i test
 *)
 
 
