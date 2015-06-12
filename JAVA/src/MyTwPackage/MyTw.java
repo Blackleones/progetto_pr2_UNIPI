@@ -11,7 +11,7 @@ import java.util.List;
 public class MyTw implements SimpleTw {
 
     /*
-    * OVERVIEW: microblog
+    * OVERVIEW: creazione e gestione di un sistema di microblogging formato da: utenti e tweet
     *---------------------------------------------------------------------------------------------------
     * FUNZIONE ASTRAZIONE:
     *   {
