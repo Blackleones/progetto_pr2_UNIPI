@@ -54,7 +54,7 @@ public class MyTw implements SimpleTw {
     *                          tweets[i].t != null
     *                          tweets[i].user != null
     *                          tweets[i].message != null
-    *       esiste k tale che tweet[i].user = users[k]  <- collegamento tra un messaggio e un utente
+    *       esiste k tale che tweet[i].user.nickname = users[k].nickname  <- collegamento tra un messaggio e un utente
     *       per ogni k (con k != i) tale che tweets[i].code != tweets[k].code
     * */
 
